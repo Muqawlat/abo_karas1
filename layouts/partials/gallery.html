@@ -1,22 +1,30 @@
-<section class="container gallery">
+<section id="gallery" class="container gallery">
   <h2>معرض الأعمال</h2>
   <div class="carousel" id="autoCarousel">
     {{/* جلب كل الصور */}}
     {{ $images := resources.Match "images/gallery/*" }}
+    
     {{ range $images }}
-      <img src="{{ .RelPermalink }}" loading="lazy">
+      {{/* loading="lazy" يجعل الصور تحمل فقط عندما يصل الزائر إليها */}}
+      <img src="{{ .RelPermalink }}" loading="lazy" alt="Gallery Image">
     {{ end }}
+
     {{ if eq (len $images) 0 }}
-       <p>يرجى رفع الصور في assets/images/gallery/</p>
+       <p style="text-align:center; width:100%;">يرجى رفع الصور في assets/images/gallery/</p>
     {{ end }}
   </div>
   
   <script>
-    // تقليب تلقائي بسيط
+    // تقليب تلقائي
     setInterval(() => {
         const c = document.getElementById('autoCarousel');
-        if(c) c.scrollLeft += c.offsetWidth;
-        if(c && c.scrollLeft >= (c.scrollWidth - c.offsetWidth)) c.scrollLeft = 0;
-    }, 3000);
+        if(c) {
+            c.scrollLeft += c.offsetWidth;
+            // إعادة الشريط للبداية عند الوصول للنهاية
+            if (c.scrollLeft >= (c.scrollWidth - c.offsetWidth - 10)) {
+                c.scrollLeft = 0;
+            }
+        }
+    }, 4000);
   </script>
 </section>
