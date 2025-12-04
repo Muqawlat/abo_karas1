@@ -1,11 +1,12 @@
 <section id="gallery" class="container gallery">
   <h2>معرض الأعمال</h2>
-  <div class="carousel" id="autoCarousel">
+  
+  <div class="carousel" id="autoCarousel" dir="ltr">
     {{/* جلب كل الصور */}}
     {{ $images := resources.Match "images/gallery/*" }}
     
     {{ range $images }}
-      {{/* loading="lazy" يجعل الصور تحمل فقط عندما يصل الزائر إليها */}}
+      {{/* loading="lazy" للأداء، وتنسيق الصورة لتملأ الكادر */}}
       <img src="{{ .RelPermalink }}" loading="lazy" alt="Gallery Image">
     {{ end }}
 
@@ -15,16 +16,33 @@
   </div>
   
   <script>
-    // تقليب تلقائي
-    setInterval(() => {
-        const c = document.getElementById('autoCarousel');
-        if(c) {
-            c.scrollLeft += c.offsetWidth;
-            // إعادة الشريط للبداية عند الوصول للنهاية
-            if (c.scrollLeft >= (c.scrollWidth - c.offsetWidth - 10)) {
-                c.scrollLeft = 0;
-            }
+    document.addEventListener("DOMContentLoaded", function() {
+        const carousel = document.getElementById('autoCarousel');
+        
+        // سرعة التقليب (كل 3 ثواني)
+        const intervalTime = 3000; 
+
+        if (carousel) {
+            setInterval(() => {
+                // حسابات دقيقة للمسافة
+                const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+                
+                // إذا وصلنا للنهاية (أو اقتربنا جداً منها بفرق 10 بكسل)
+                // نعود للبداية فوراً
+                if (carousel.scrollLeft >= maxScrollLeft - 10) {
+                    carousel.scrollTo({
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // وإلا، تحرك لليمين بمقدار عرض صورة واحدة تقريباً
+                    carousel.scrollBy({
+                        left: carousel.clientWidth, // يتحرك بمقدار عرض الشاشة الظاهرة
+                        behavior: 'smooth'
+                    });
+                }
+            }, intervalTime);
         }
-    }, 4000);
+    });
   </script>
 </section>
