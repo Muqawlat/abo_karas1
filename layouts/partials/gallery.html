@@ -1,0 +1,22 @@
+<section class="container gallery">
+  <h2>معرض الأعمال</h2>
+  <div class="carousel" id="autoCarousel">
+    {{/* جلب كل الصور */}}
+    {{ $images := resources.Match "images/gallery/*" }}
+    {{ range $images }}
+      <img src="{{ .RelPermalink }}" loading="lazy">
+    {{ end }}
+    {{ if eq (len $images) 0 }}
+       <p>يرجى رفع الصور في assets/images/gallery/</p>
+    {{ end }}
+  </div>
+  
+  <script>
+    // تقليب تلقائي بسيط
+    setInterval(() => {
+        const c = document.getElementById('autoCarousel');
+        if(c) c.scrollLeft += c.offsetWidth;
+        if(c && c.scrollLeft >= (c.scrollWidth - c.offsetWidth)) c.scrollLeft = 0;
+    }, 3000);
+  </script>
+</section>
